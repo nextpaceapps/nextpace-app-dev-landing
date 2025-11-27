@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Rocket, CheckCircle, Clock, ArrowRight } from 'lucide-react';
-import { SharedProps } from '../types';
+import { SharedProps } from '../../types';
 import styles from './Process.module.scss';
 
 const processSteps = [

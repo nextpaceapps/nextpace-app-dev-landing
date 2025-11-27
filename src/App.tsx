@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Github, Code, Zap } from 'lucide-react';
-import { ThemeProvider } from './theme';
+import { ThemeProvider } from '../theme';
 import LoadingScreen from './components/LoadingScreen';
-import Hero from './components/Hero';
+import Hero from './pages/Hero';
 import Navbar from './components/Navbar';
-import Services from './components/Services';
-import Process from './components/Process';
-import Pricing from './components/Pricing';
+import Services from './pages/Services';
+import Process from './pages/Process';
+import Pricing from './pages/Pricing';
 import ContactModal from './components/ContactModal';
 import styles from './App.module.scss';
 

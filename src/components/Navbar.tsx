@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Zap } from 'lucide-react';
-import { SharedProps } from '../types';
+import { SharedProps } from '../../types';
 import styles from './Navbar.module.scss';
 
 const Navbar: React.FC<SharedProps> = ({ onOpenContact }) => {

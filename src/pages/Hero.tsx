@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { SharedProps } from '../types';
+import { SharedProps } from '../../types';
 import styles from './Hero.module.scss';
 
 const Hero: React.FC<SharedProps> = ({ onOpenContact }) => {

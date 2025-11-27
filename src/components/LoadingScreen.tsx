@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { LoadingProps } from '../types';
+import { LoadingProps } from '../../types';
 import styles from './LoadingScreen.module.scss';
 
 const LoadingScreen: React.FC<LoadingProps> = ({ onComplete }) => {

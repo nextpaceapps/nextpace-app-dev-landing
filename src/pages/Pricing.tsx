@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, Zap, Code, Layers, Rocket, Clock, Ban } from 'lucide-react';
-import { SharedProps } from '../types';
+import { SharedProps } from '../../types';
 import styles from './Pricing.module.scss';
 
 const tiers = [
