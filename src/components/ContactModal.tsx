@@ -3,6 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle } from 'lucide-react';
 import styles from './ContactModal.module.scss';
 
+const API_URL = 'https://nextpace-crm-api--nextpace-crm-api.europe-west4.hosted.app/api/v1/webhooks/opportunities';
+const TENANT_ID = '7b7b1b05c6384156a8048854efd7b87c';
+
+interface FormData {
+  email: string;
+  projectIdea: string;
+}
+
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -10,13 +18,46 @@ interface ContactModalProps {
 
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<'form' | 'success'>('form');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormData>({ email: '', projectIdea: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
-    setTimeout(() => {
-      setStep('success');
-    }, 1000);
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tenantId: TENANT_ID,
+          title: 'Website Inquiry',
+          description: formData.projectIdea,
+          source: 'NextPace Website',
+          email: formData.email,
+        }),
+      });
+
+      if (response.ok) {
+        setStep('success');
+        setFormData({ email: '', projectIdea: '' });
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -24,6 +65,9 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
     // Reset after animation finishes
     setTimeout(() => {
       setStep('form');
+      setFormData({ email: '', projectIdea: '' });
+      setError(null);
+      setIsSubmitting(false);
     }, 500);
   };
 
@@ -72,6 +116,9 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                       </label>
                       <input 
                         type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
                         required
                         placeholder="you@company.com"
                         className={styles.input}
@@ -85,6 +132,10 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                       <textarea 
                         required
                         rows={5}
+                        maxLength={5000}
+                        name="projectIdea"
+                        value={formData.projectIdea}
+                        onChange={handleInputChange}
                         placeholder="Tell us about what you want to build..."
                         className={`${styles.input} ${styles.textarea}`}
                       />
@@ -93,9 +144,11 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                     <div className={styles.formGroup}>
                       <button 
                         type="submit"
+                        disabled={isSubmitting}
                         className={styles.submitButton}
+                        style={{ opacity: isSubmitting ? 0.7 : 1 }}
                       >
-                        <Send size={18} /> SEND REQUEST
+                        <Send size={18} /> {isSubmitting ? 'SENDING...' : 'SEND REQUEST'}
                       </button>
                       <p className={styles.submitNote}>
                         We usually respond within 2 hours.

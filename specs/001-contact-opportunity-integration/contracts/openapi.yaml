@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: NextPace CRM Opportunity Webhook
+  version: 1.0.0
+paths:
+  /api/v1/webhooks/opportunities:
+    post:
+      summary: Create a new opportunity from a website inquiry
+      operationId: createOpportunity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tenantId
+                - title
+                - description
+                - source
+                - email
+              properties:
+                tenantId:
+                  type: string
+                  format: uuid
+                  example: "7b7b1b05c6384156a8048854efd7b87c"
+                title:
+                  type: string
+                  example: "Website Inquiry"
+                description:
+                  type: string
+                  maxLength: 5000
+                  example: "I need a React application..."
+                source:
+                  type: string
+                  example: "NextPace Website"
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+      responses:
+        '201':
+          description: Opportunity successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    example: "open"
+        '400':
+          description: Invalid input
+        '500':
+          description: Server error
+
