@@ -32,12 +32,27 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
     setError(null);
 
+    // Create AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
     try {
+      // Log the URL being used for debugging
+      console.log('Sending request to:', API_URL);
+      console.log('Request payload:', {
+        tenantId: TENANT_ID,
+        title: 'Website Inquiry',
+        description: formData.projectIdea,
+        source: 'NextPace Website',
+        email: formData.email,
+      });
+      
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: controller.signal,
         body: JSON.stringify({
           tenantId: TENANT_ID,
           title: 'Website Inquiry',
@@ -47,14 +62,52 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
         }),
       });
 
+      clearTimeout(timeoutId);
+
       if (response.ok) {
         setStep('success');
         setFormData({ email: '', projectIdea: '' });
+        setError(null);
       } else {
-        setError('Something went wrong. Please try again.');
+        // Provide more specific error messages based on status code
+        let errorMessage = 'Something went wrong. Please try again.';
+        if (response.status === 404) {
+          errorMessage = 'The service is temporarily unavailable. Please try again later or contact us directly.';
+        } else if (response.status === 400) {
+          errorMessage = 'Please check your information and try again.';
+        } else if (response.status >= 500) {
+          errorMessage = 'Our server is experiencing issues. Please try again in a few moments.';
+        }
+        setError(errorMessage);
+        console.error('API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url || API_URL,
+        });
       }
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      clearTimeout(timeoutId);
+      
+      // Check if it's an abort (timeout) or network error
+      let errorMessage = 'Something went wrong. Please try again.';
+      
+      if (err instanceof Error) {
+        if (err.name === 'AbortError') {
+          errorMessage = 'The request took too long. Please check your connection and try again.';
+        } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+          errorMessage = 'Unable to connect to the server. This may be due to network issues or CORS restrictions. Please contact us directly.';
+        } else if (err.message.includes('fetch')) {
+          errorMessage = 'Unable to connect to the server. Please check your internet connection and try again.';
+        }
+      }
+      
+      setError(errorMessage);
+      console.error('Request failed:', {
+        error: err,
+        name: err instanceof Error ? err.name : 'Unknown',
+        message: err instanceof Error ? err.message : String(err),
+        url: API_URL,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -140,6 +193,22 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                         className={`${styles.input} ${styles.textarea}`}
                       />
                     </div>
+
+                    {error && (
+                      <div className={styles.formGroup}>
+                        <div style={{ 
+                          color: '#ef4444', 
+                          backgroundColor: '#fee2e2',
+                          padding: '0.75rem',
+                          borderRadius: '0.375rem',
+                          marginBottom: '1rem',
+                          fontSize: '0.875rem',
+                          border: '1px solid #fecaca'
+                        }}>
+                          {error}
+                        </div>
+                      </div>
+                    )}
 
                     <div className={styles.formGroup}>
                       <button 
