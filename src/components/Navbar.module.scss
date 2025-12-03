@@ -8,6 +8,8 @@
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid $border-default;
+  border-radius: 0 0 0.75rem 0.75rem;
+  transition: all 0.3s ease-in-out;
 }
 
 .container {
