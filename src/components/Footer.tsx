@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
         }
       }
     ],
-    copyright: `© ${new Date().getFullYear()} Next Pace Development. All systems operational.`
+    copyright: ''
   };
 
   const renderColumn = (column: typeof footerContent.columns[0], index: number) => {
@@ -143,9 +143,6 @@ const Footer: React.FC = () => {
         <div className={styles.footerGrid}>
           {footerContent.columns.map((column, index) => renderColumn(column, index))}
         </div>
-        <p className={styles.footerCopyright}>
-          {footerContent.copyright}
-        </p>
       </div>
     </footer>
   );
