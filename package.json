@@ -4,8 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "npm run build:blog:dev && vite",
+    "dev:blog": "cd blog && hugo server --port 1314 --bind 0.0.0.0",
+    "build": "npm run build:blog:prod && vite build",
+    "build:blog": "npm run build:blog:prod",
+    "build:blog:dev": "cd blog && hugo --minify --baseURL /",
+    "build:blog:prod": "cd blog && hugo --minify --baseURL https://nextpace.dev",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,0 +1,15 @@
+baseURL = "https://nextpace.dev"
+title = "Next Pace Dev Blog"
+languageCode = "en-us"
+publishDir = "../dist/blog"
+theme = "neonic-blog"
+
+[pagination]
+  pagerSize = 5
+
+[permalinks]
+  posts = "/blog/:slug"
+
+[params]
+  description = "Next Pace Dev Blog - Development insights and updates"
+

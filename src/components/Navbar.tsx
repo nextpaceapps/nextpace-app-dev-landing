@@ -20,10 +20,10 @@ const Navbar: React.FC<SharedProps> = ({ onOpenContact }) => {
           
           <div className={styles.navLinks}>
             <div className={styles.linksList}>
-              {['SERVICES', 'PROCESS', 'PRICING', 'CAREERS', 'CONTACT'].map((item) => (
+              {['SERVICES', 'PROCESS', 'PRICING', 'CAREERS', 'BLOG'].map((item) => (
                 <a
                   key={item}
-                  href={`#${item.toLowerCase()}`}
+                  href={item === 'BLOG' ? '/blog' : `#${item.toLowerCase()}`}
                   className={styles.link}
                 >
                   {item}

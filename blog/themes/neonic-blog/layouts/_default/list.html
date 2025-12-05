@@ -1,0 +1,34 @@
+{{ define "main" }}
+<div class="blog-container">
+    <h1>Blog</h1>
+    {{ if .Paginator.Pages }}
+    <div class="blog-posts">
+        {{ range .Paginator.Pages }}
+        <article class="blog-post-preview">
+            <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+            <p class="blog-excerpt">{{ .Params.excerpt | default .Summary }}</p>
+            <a href="{{ .Permalink }}" class="blog-read-more">Read more →</a>
+        </article>
+        {{ end }}
+    </div>
+    
+    {{ if gt .Paginator.TotalPages 1 }}
+    <div class="pagination">
+        {{ if .Paginator.HasPrev }}
+        <a href="{{ if eq .Paginator.Prev.PageNumber 1 }}/blog{{ else }}{{ .Paginator.Prev.URL }}{{ end }}" class="pagination-link">← Previous</a>
+        {{ end }}
+        <span class="pagination-info">Page {{ .Paginator.PageNumber }} of {{ .Paginator.TotalPages }}</span>
+        {{ if .Paginator.HasNext }}
+        <a href="{{ .Paginator.Next.URL }}" class="pagination-link">Next →</a>
+        {{ end }}
+    </div>
+    {{ end }}
+    {{ else }}
+    <div class="blog-empty-state">
+        <p>No blog posts available yet. Check back soon!</p>
+    </div>
+    {{ end }}
+</div>
+{{ end }}
+

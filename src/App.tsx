@@ -13,11 +13,19 @@ import ContactModal from './components/ContactModal';
 import styles from './App.module.scss';
 
 const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  // Only show loading screen once on main page (persists across browser sessions)
+  const [isLoading, setIsLoading] = useState(() => {
+    // Only show on main page (/) and only if user hasn't seen it before
+    const isMainPage = window.location.pathname === '/' || window.location.pathname === '';
+    const hasSeenBefore = localStorage.getItem('hasSeenLoadingScreen') === 'true';
+    return isMainPage && !hasSeenBefore;
+  });
   const [isContactOpen, setIsContactOpen] = useState(false);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
+    // Mark that user has seen the loading screen (persists forever)
+    localStorage.setItem('hasSeenLoadingScreen', 'true');
   };
 
   const handleOpenContact = () => {
